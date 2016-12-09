@@ -1,0 +1,2 @@
+class WebResponse < ApplicationRecord
+end
