@@ -1,1 +1,3 @@
 LEAGUE_YEARS = 2011..Time.new.year
+
+LEAGUE_ID = ENV['ESPN_LEAGUE_ID']
