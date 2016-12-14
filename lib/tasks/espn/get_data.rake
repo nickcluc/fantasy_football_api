@@ -4,7 +4,7 @@ namespace :get_data do
     LEAGUE_YEARS.each do |year|
       query = { leagueId: LEAGUE_ID, seasonId: year }
       wr = WebResponse.find_or_initialize_by league_year: year
-      if wr.exists? && wr.updated_at.today?
+      if wr.persisted? && wr.updated_at.today?
         puts "We already updated #{wr.league_year} today"
         next
       end
