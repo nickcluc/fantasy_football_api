@@ -9,6 +9,7 @@ namespace :get_data do
         next
       end
       response = HTTParty.get 'http://games.espn.com/ffl/api/v2/leagueSettings', query: query
+      next if response.code >= 400
       wr.external_league_id = response['metadata']['leagueId']
       wr.response_body = response.body
       wr.save!
