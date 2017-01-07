@@ -31,4 +31,11 @@ namespace :parse_data do
       response.teams.each{|team_json| Team.build_from_json(team_json,response.league_year.to_i).save! }
     end
   end
+
+  desc "Parse Team Matchups data from ESPN"
+  task :team_matchups => :environment do
+    Team.all.each do |team|
+      team.build_team_matchups
+    end
+  end
 end
