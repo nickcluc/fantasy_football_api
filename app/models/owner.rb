@@ -20,15 +20,19 @@ class Owner < ApplicationRecord
     team_matchups.where(regular_season: true).pluck(:score)
   end
 
-  def points
-    total_points_array.inject(0){|accum, i| accum + i }
+  def total_points
+    Statistics.sum(points_for_array)
+  end
+
+  def average_total_points
+    Statistics.average(points_for_array, points_for_array.count).round(2)
   end
 
   def average_regular_season_score
-    Statistics.average(teams.pluck(:points_for), team_matchups.where(regular_season: true).count)
+    Statistics.average(teams.pluck(:points_for), team_matchups.where(regular_season: true).count).round(2)
   end
 
-  def average_weekly_score
-
+  def self.sorted_by_average_regular_season_score
+    Owner.all.sort_by(&:average_regular_season_score).reverse
   end
 end
