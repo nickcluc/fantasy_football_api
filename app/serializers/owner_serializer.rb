@@ -1,6 +1,7 @@
 class OwnerSerializer < ActiveModel::Serializer
   attributes :first_name,
     :last_name,
+    :full_name,
     :username,
     :espn_id,
     :league_manager,
