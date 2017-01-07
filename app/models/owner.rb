@@ -16,6 +16,10 @@ class Owner < ApplicationRecord
     teams.pluck(:points_for)
   end
 
+  def regular_season_scores_array
+    team_matchups.where(regular_season: true).pluck(:score)
+  end
+
   def points
     total_points_array.inject(0){|accum, i| accum + i }
   end
