@@ -1,5 +1,6 @@
 class OwnerSerializer < ActiveModel::Serializer
-  attributes :first_name,
+  attributes :id,
+    :first_name,
     :last_name,
     :full_name,
     :username,
