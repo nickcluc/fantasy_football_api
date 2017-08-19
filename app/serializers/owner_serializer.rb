@@ -1,5 +1,6 @@
 class OwnerSerializer < ActiveModel::Serializer
-  attributes :first_name,
+  attributes :id,
+    :first_name,
     :last_name,
     :full_name,
     :username,
@@ -12,4 +13,8 @@ class OwnerSerializer < ActiveModel::Serializer
     :regular_season_scores_array
 
   has_many :teams
+
+  def teams
+    object.teams.order('league_year')
+  end
 end

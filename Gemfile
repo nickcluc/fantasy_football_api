@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 5.1.1'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 
@@ -24,4 +24,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Libraries
 gem 'httparty'
-gem 'active_model_serializers'
+gem 'active_model_serializers', '~> 0.8.1'
