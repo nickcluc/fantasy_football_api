@@ -12,6 +12,6 @@ use Rack::Cors do
     origins ENV['FRONTEND_URL']
     resource '*',
         :headers => :any,
-        :methods => [:get]
+        :methods => :get
   end
 end
