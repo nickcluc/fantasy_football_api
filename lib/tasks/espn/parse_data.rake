@@ -28,7 +28,14 @@ namespace :parse_data do
   desc "Parse Team data from ESPN"
   task :teams => :environment do
     WebResponse.all.each do |response|
-      response.teams.each{|team_json| Team.build_from_json(team_json,response.league_year.to_i).save! }
+      response.teams.each do |team_json|
+        begin
+          t = Team.build_from_json(team_json,response.league_year.to_i, response)
+          t.save!
+        rescue => err
+          puts "error for response #{response.id}: #{err.backtrace}"
+        end
+      end
     end
   end
 

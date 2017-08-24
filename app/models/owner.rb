@@ -16,12 +16,20 @@ class Owner < ApplicationRecord
     teams.pluck(:points_for)
   end
 
+  def points_against_array
+    teams.pluck(:points_against)
+  end
+
   def regular_season_scores_array
     team_matchups.where(regular_season: true).pluck(:score)
   end
 
   def total_points
-    Statistics.sum(points_for_array)
+    Statistics.sum(points_for_array).round(2)
+  end
+
+  def total_points_against
+    Statistics.sum(points_against_array).round(2)
   end
 
   def average_total_points

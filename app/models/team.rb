@@ -71,10 +71,10 @@ class Team < ApplicationRecord
     end
   end
 
-  private
-  def self.build_from_json(team_json,league_year)
+  def self.build_from_json(team_json,league_year, wr)
     # team_json should come from response['leaguesettings']['teams'].values.each
     t =                       self.find_or_initialize_by(external_team_id:"#{league_year}#{team_json['teamId']}".to_i)
+    t.web_response =          wr
     t.owner =                 Owner.find_by(espn_id: team_json['owners'].first['ownerId'])
     t.name =                  "#{team_json['teamLocation']} #{team_json['teamNickname']}"
     t.logo_url =              team_json['logoUrl']
