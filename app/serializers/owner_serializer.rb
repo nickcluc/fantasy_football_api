@@ -23,24 +23,4 @@ class OwnerSerializer < ActiveModel::Serializer
   def teams
     object.teams.order('league_year')
   end
-
-  def career_length
-    object.teams.count
-  end
-
-  def career_wins
-    object.teams.pluck(:wins).inject(0){|sum,x| sum + x }
-  end
-
-  def career_losses
-    object.teams.pluck(:losses).inject(0){|sum,x| sum + x }
-  end
-
-  def min_score
-    object.regular_season_scores_array.min
-  end
-
-  def max_score
-    object.regular_season_scores_array.max
-  end
 end

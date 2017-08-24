@@ -43,4 +43,24 @@ class Owner < ApplicationRecord
   def self.sorted_by_average_regular_season_score
     Owner.all.sort_by(&:average_regular_season_score).reverse
   end
+
+  def career_length
+    teams.count
+  end
+
+  def career_wins
+    teams.pluck(:wins).inject(0){|sum,x| sum + x }
+  end
+
+  def career_losses
+    teams.pluck(:losses).inject(0){|sum,x| sum + x }
+  end
+
+  def min_score
+    regular_season_scores_array.min
+  end
+
+  def max_score
+    regular_season_scores_array.max
+  end
 end
