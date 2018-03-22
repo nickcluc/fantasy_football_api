@@ -23,4 +23,7 @@ class OwnerSerializer < ActiveModel::Serializer
   def teams
     object.teams.order('league_year')
   end
+
+  def regular_season_scores_array
+    object.regular_season_matchups.pluck(:score)
 end

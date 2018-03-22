@@ -2,6 +2,12 @@ class Owner < ApplicationRecord
   has_many :teams
   has_many :team_matchups, through: :teams
 
+  def self.luck_hash
+    hash = {}
+    Owner.includes(:team_matchups).all.each { |owner| hash[owner.full_name.gsub(/\s+/, "")] = owner.lucky_wins.count }
+    hash
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end
@@ -20,8 +26,23 @@ class Owner < ApplicationRecord
     teams.pluck(:points_against)
   end
 
-  def regular_season_scores_array
-    team_matchups.where(regular_season: true).pluck(:score)
+  def regular_season_matchups
+    team_matchups.where(regular_season: true)
+  end
+
+  def winning_matchups
+    regular_season_matchups.where('score > opponent_score')
+  end
+
+  def lucky_wins
+    winning_matchups.to_a.keep_if { |match| match.lucky_win? }
+  end
+
+  def league_year_matchups(league_year=nil, regular_season=nil)
+    matchups = team_matchups
+    matchups = matchups.where(regular_season: regular_season) unless regular_season.nil?
+    matchups = matchups.where(season_id: league_year) unless league_year.nil?
+    matchups
   end
 
   def total_points
@@ -57,10 +78,36 @@ class Owner < ApplicationRecord
   end
 
   def min_score
-    regular_season_scores_array.min
+    regular_season_matchups.pluck(:score).min
   end
 
   def max_score
-    regular_season_scores_array.max
+    regular_season_matchups.pluck(:score).max
+  end
+
+  def head_to_head_record(other_owner_id,regular_season=true)
+    return if other_owner_id == self.id
+    other_owner = Owner.find(other_owner_id)
+    w = 0
+    l = 0
+    d = 0
+    league_year_matchups(nil,regular_season).where(opponent_id: other_owner.teams.pluck(:id)).each do |match|
+      if match.win?
+        w += 1
+      elsif match.loss?
+        l += 1
+      else
+        d += 1
+      end
+    end
+    "#{w}-#{l}-#{d}"
+  end
+
+  def head_to_head_vs_all
+    hash = {}
+    Owner.where.not(id: id).each do |owner|
+      hash[owner.full_name] = head_to_head_record(owner.id)
+    end
+    hash
   end
 end

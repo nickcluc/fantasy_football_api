@@ -10,64 +10,66 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170107044751) do
+ActiveRecord::Schema.define(version: 20180322032653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "owners", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "username"
-    t.integer  "espn_id"
-    t.boolean  "league_manager"
-    t.boolean  "league_creator"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+  create_table "owners", id: :serial, force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.string "username"
+    t.integer "espn_id"
+    t.boolean "league_manager"
+    t.boolean "league_creator"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "team_matchups", force: :cascade do |t|
-    t.integer  "team_id"
-    t.integer  "score"
-    t.integer  "season_id"
-    t.integer  "week_number"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.boolean  "regular_season"
+  create_table "team_matchups", id: :serial, force: :cascade do |t|
+    t.integer "team_id"
+    t.integer "score"
+    t.integer "season_id"
+    t.integer "week_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "regular_season"
+    t.integer "opponent_id"
+    t.integer "opponent_score"
   end
 
-  create_table "teams", force: :cascade do |t|
-    t.string   "name"
-    t.string   "abbreviation"
-    t.string   "logo_url"
-    t.integer  "wins"
-    t.integer  "losses"
-    t.integer  "ties"
-    t.float    "points_for"
-    t.float    "points_against"
-    t.integer  "league_year"
-    t.integer  "standing"
-    t.integer  "acquisitions"
-    t.integer  "drops"
-    t.integer  "trades"
-    t.integer  "acquisition_spent"
-    t.integer  "acquisition_remaining"
-    t.integer  "current_streak"
-    t.integer  "owner_id"
-    t.integer  "external_team_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-    t.integer  "web_response_id"
-    t.integer  "total_score"
+  create_table "teams", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "abbreviation"
+    t.string "logo_url"
+    t.integer "wins"
+    t.integer "losses"
+    t.integer "ties"
+    t.float "points_for"
+    t.float "points_against"
+    t.integer "league_year"
+    t.integer "standing"
+    t.integer "acquisitions"
+    t.integer "drops"
+    t.integer "trades"
+    t.integer "acquisition_spent"
+    t.integer "acquisition_remaining"
+    t.integer "current_streak"
+    t.integer "owner_id"
+    t.integer "external_team_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "web_response_id"
+    t.integer "total_score"
   end
 
-  create_table "web_responses", force: :cascade do |t|
-    t.integer  "external_league_id"
-    t.string   "league_year"
-    t.text     "response_body"
-    t.text     "response_request"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+  create_table "web_responses", id: :serial, force: :cascade do |t|
+    t.integer "external_league_id"
+    t.string "league_year"
+    t.text "response_body"
+    t.text "response_request"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

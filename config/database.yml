@@ -80,6 +80,6 @@ test:
 #
 production:
   <<: *default
-  database: sabermetrics_guy_production
-  username: sabermetrics_guy
-  password: <%= ENV['SABERMETRICS_GUY_DATABASE_PASSWORD'] %>
+  database: steves_league_production
+  username: steves_league_guy
+  password: <%= ENV['STEVE_DATABASE_PASSWORD'] %>

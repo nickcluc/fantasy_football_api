@@ -31,6 +31,10 @@ class Team < ApplicationRecord
     points_for / regular_season_matchup_count
   end
 
+  def league_year_matchups(league_year, regular_season=true)
+    team_matchups.where(season_id: league_year, regular_season: regular_season)
+  end
+
   def median
     sorted = scores.sort
     len = sorted.length
@@ -60,14 +64,23 @@ class Team < ApplicationRecord
       matchup_json = si[:matchups].first
       if matchup_json[:awayTeamId] == team_id.to_i
         score = matchup_json[:awayTeamScores].first
+        opponent_external_identifier = "#{league_year}#{matchup_json[:homeTeamId]}" unless matchup_json[:homeTeamId].to_s.empty?
+        opponent_score = matchup_json[:homeTeamScores].first unless matchup_json[:homeTeamScores].nil?
       elsif matchup_json[:homeTeamId] == team_id.to_i
         score = matchup_json[:homeTeamScores].first
+        opponent_external_identifier = "#{league_year}#{matchup_json[:awayTeamId]}" unless matchup_json[:awayTeamId].to_s.empty?
+        opponent_score = matchup_json[:awayTeamScores].first unless matchup_json[:awayTeamScores].nil?
       end
-
-      tm = TeamMatchup.find_or_initialize_by(team_id: id, week_number: week_number, season_id: league_year)
-      tm.regular_season = week_number <= reg_season_week_count
-      tm.score = score
-      tm.save
+      begin
+        tm = TeamMatchup.find_or_initialize_by(team_id: id, week_number: week_number, season_id: league_year)
+        tm.regular_season = week_number <= reg_season_week_count
+        tm.score = score
+        tm.opponent_id = Team.find_by(external_team_id: opponent_external_identifier).id
+        tm.opponent_score = opponent_score
+        tm.save!
+      rescue => err
+        print "#{opponent_external_identifier}"
+      end
     end
   end
 
