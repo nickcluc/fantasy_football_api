@@ -26,4 +26,5 @@ class OwnerSerializer < ActiveModel::Serializer
 
   def regular_season_scores_array
     object.regular_season_matchups.pluck(:score)
+  end
 end
