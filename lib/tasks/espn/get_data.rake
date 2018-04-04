@@ -9,7 +9,6 @@ namespace :get_data do
         next
       end
       response = HTTParty.get 'http://games.espn.com/ffl/api/v2/leagueSettings', query: query
-      binding.pry
       #/ffl/api/v2/leagueSchedules?leagueId=445805&rand=0023623302299
       next if response.code >= 400
       wr.external_league_id = response['metadata']['leagueId']
