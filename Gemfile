@@ -25,3 +25,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # Libraries
 gem 'httparty'
 gem 'active_model_serializers', '~> 0.8.1'
+
+
+# Security Updates
+gem 'loofah', '~> 2.2.1'
+gem 'nokogiri', '~> 1.8.1'
