@@ -6,6 +6,10 @@ Types::QueryType = GraphQL::ObjectType.define do
     resolve -> (obj, args, ctx) { Owner.all }
   end
 
+  field :teams, !types[Types::TeamType] do
+    resolve -> (obj, args, ctx) { Team.all }
+  end
+
   field :owner do
     type Types::OwnerType
     argument :id, !types.ID

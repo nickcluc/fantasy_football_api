@@ -1,4 +1,4 @@
-SabermetricsGuySchema = GraphQL::Schema.define do
+FantasyFootballApiSchema = GraphQL::Schema.define do
   mutation(Types::MutationType)
   query(Types::QueryType)
 end

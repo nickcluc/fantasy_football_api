@@ -7,7 +7,7 @@ class GraphqlController < ApplicationController
       # Query context goes here, for example:
       # current_user: current_user,
     }
-    result = SabermetricsGuySchema.execute(query, variables: variables, context: context, operation_name: operation_name)
+    result = FantasyFootballApiSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   end
 
