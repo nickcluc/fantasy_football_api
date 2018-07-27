@@ -1,4 +1,5 @@
 class Team < ApplicationRecord
+  default_scope { order(league_year: :desc) }
   include Statistics
 
   belongs_to :owner
