@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.5.1'
 
-gem 'rails', '~> 5.1'
+gem 'rails', '~> 5.2'
 gem 'pg', '~> 0.21'
 gem 'puma', '~> 3.9'
 gem 'graphql', "~> 1.7"
@@ -12,7 +12,7 @@ gem 'rack-cors', "~> 1.0", :require => 'rack/cors'
 
 group :development, :test do
   gem 'pry-rails', "~> 0.3"
-  gem 'dotenv-rails', "~> 2.2"
+  gem 'dotenv-rails', "~> 2.5"
   gem 'bullet', "~> 5.4"
 end
 
