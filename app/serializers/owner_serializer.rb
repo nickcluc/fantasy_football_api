@@ -1,4 +1,5 @@
-class OwnerSerializer < ActiveModel::Serializer
+class OwnerSerializer
+  include FastJsonapi::ObjectSerializer
   attributes :id,
     :first_name,
     :last_name,
@@ -20,11 +21,9 @@ class OwnerSerializer < ActiveModel::Serializer
 
   has_many :teams
 
-  def teams
-    object.teams.order('league_year')
-  end
-
-  def regular_season_scores_array
+  attribute :regular_season_scores_array do |object|
     object.regular_season_matchups.pluck(:score)
   end
+
+  set_key_transform :dash
 end

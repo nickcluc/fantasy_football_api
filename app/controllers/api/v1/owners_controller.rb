@@ -12,6 +12,6 @@ class Api::V1::OwnersController < Api::V1::BaseController
         end
       end
     end
-    render json: @owners, callback: params['callback']
+    render json: OwnerSerializer.new(@owners).serialized_json, callback: params['callback']
   end
 end

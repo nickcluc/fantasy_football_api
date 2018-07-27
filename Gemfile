@@ -6,6 +6,7 @@ gem 'rails', '~> 5.2'
 gem 'pg', '~> 0.21'
 gem 'puma', '~> 3.9'
 gem 'graphql', "~> 1.7"
+gem 'fast_jsonapi'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors', "~> 1.0", :require => 'rack/cors'
