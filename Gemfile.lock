@@ -42,6 +42,9 @@ GEM
       tzinfo (~> 1.1)
     arel (8.0.0)
     builder (3.2.3)
+    bullet (5.7.5)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11.0)
     coderay (1.1.1)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
@@ -131,6 +134,7 @@ GEM
     thread_safe (0.3.6)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
+    uniform_notifier (1.11.0)
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
@@ -140,6 +144,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.8)
+  bullet (~> 5.4)
   dotenv-rails (~> 2.2)
   graphql (~> 1.7)
   httparty (~> 0.15)
@@ -155,5 +160,8 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0)
   tzinfo-data
 
+RUBY VERSION
+   ruby 2.5.1p57
+
 BUNDLED WITH
-   1.15.1
+   1.16.3

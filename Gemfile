@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.5.1'
 
 gem 'rails', '~> 5.1'
 gem 'pg', '~> 0.21'
@@ -12,6 +13,7 @@ gem 'rack-cors', "~> 1.0", :require => 'rack/cors'
 group :development, :test do
   gem 'pry-rails', "~> 0.3"
   gem 'dotenv-rails', "~> 2.2"
+  gem 'bullet', "~> 5.4"
 end
 
 group :development do
