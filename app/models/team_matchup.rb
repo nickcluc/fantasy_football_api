@@ -50,6 +50,10 @@ class TeamMatchup < ApplicationRecord
     (w.to_f/(matchups.count - d).to_f).round(3)
   end
 
+  def self.no_dates
+    TeamMatchup.where(matchup_date: nil)
+  end
+
   protected
 
   def update_total

@@ -44,6 +44,14 @@ namespace :parse_data do
     Team.all.each do |team|
       team.build_team_matchups
     end
+
+    TeamMatchup.no_dates.each do |matchup|
+      TeamMatchup.transaction do
+        szn = Season.find_by(league_year: matchup.season_id)
+        matchup.matchup_date = szn.first_week_date + (matchup.week_number - 1).weeks
+        matchup.save!
+      end
+    end
   end
 
   desc "Parse Season Data"
