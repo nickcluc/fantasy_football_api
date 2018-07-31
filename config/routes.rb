@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :owners, only: [:index]
-      resources :teams, only: [:show]
+      resources :teams, only: [:index]
+      resources :team_matchups, only: [:index]
+      resources :seasons, only: [:index]
     end
   end
 end

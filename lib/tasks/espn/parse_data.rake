@@ -45,4 +45,35 @@ namespace :parse_data do
       team.build_team_matchups
     end
   end
+
+  desc "Parse Season Data"
+  task :seasons => :environment do
+    KICKOFF_HASH = {
+      "2011" => "12/9/2011",
+      "2012" => "10/9/2012",
+      "2013" => "9/9/2013",
+      "2014" => "8/9/2014",
+      "2015" => "14/9/2015",
+      "2016" => "12/9/2016",
+      "2017" => "11/9/2017",
+      "2018" => "10/9/2018"
+    }
+    WebResponse.all.each do |response|
+      json = JSON.parse response.response_body
+      Season.transaction do
+        season = Season.find_or_initialize_by(league_year: response.league_year)
+
+        season.first_week_date = Date.parse KICKOFF_HASH[season.league_year.to_s]
+        champ_id = json['leaguesettings']['finalCalculatedRanking'][0]
+        second_id = json['leaguesettings']['finalCalculatedRanking'][1]
+        third_id = json['leaguesettings']['finalCalculatedRanking'][2]
+        last_id = json['leaguesettings']['playoffSeedings'].last
+        season.champion_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][champ_id.to_s]['owners'].first['ownerId']).id
+        season.second_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][second_id.to_s]['owners'].first['ownerId']).id
+        season.third_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][third_id.to_s]['owners'].first['ownerId']).id
+        season.last_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][last_id.to_s]['owners'].first['ownerId']).id
+        season.save!
+      end
+    end
+  end
 end

@@ -1,11 +1,19 @@
 class Owner < ApplicationRecord
-  has_many :teams
-  has_many :team_matchups, through: :teams
+  has_many :teams, -> { order(league_year: :asc) }
+  has_many :team_matchups, -> { order(matchup_date: :asc) }, through: :teams
+  has_many :championships, class_name: "Season", foreign_key: "champion_id"
+  has_many :second_places, class_name: "Season", foreign_key: "second_place_id"
+  has_many :third_places, class_name: "Season", foreign_key: "third_place_id"
+  has_many :last_places, class_name: "Season", foreign_key: "last_place_id"
 
   def self.luck_hash
     hash = {}
-    Owner.includes(:team_matchups).all.each { |owner| hash[owner.full_name.gsub(/\s+/, "")] = owner.lucky_wins.count }
+    Owner.all.each { |owner| hash[owner.full_name.gsub(/\s+/, "")] = owner.lucky_wins.count }
     hash
+  end
+
+  def regular_season_scores_array
+    regular_season_matchups.pluck(:score)
   end
 
   def full_name

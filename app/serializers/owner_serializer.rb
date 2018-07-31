@@ -1,5 +1,6 @@
 class OwnerSerializer
   include FastJsonapi::ObjectSerializer
+
   attributes :id,
     :first_name,
     :last_name,
@@ -15,15 +16,13 @@ class OwnerSerializer
     :career_losses,
     :average_total_points,
     :average_regular_season_score,
-    :regular_season_scores_array,
     :min_score,
     :max_score
 
   has_many :teams
-
-  attribute :regular_season_scores_array do |object|
-    object.regular_season_matchups.pluck(:score)
-  end
-
-  set_key_transform :dash
+  has_many :team_matchups
+  has_many :championships
+  has_many :second_places
+  has_many :third_places
+  has_many :last_places
 end

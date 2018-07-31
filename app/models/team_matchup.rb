@@ -3,18 +3,25 @@ class TeamMatchup < ApplicationRecord
 
   after_save :update_total
 
-  default_scope { order(season_id: :asc, week_number: :asc) }
+  def date
+    szn = Season.find_by(league_year: season_id)
+    szn.first_week_date + (week_number - 1).weeks
+  end
 
   def opponent
-    Team.find(opponent_id)
+    Team.find(opponent_id) unless bye?
   end
 
   def win?
-    score > opponent_score
+    score > opponent_score unless bye?
   end
 
   def loss?
     !win?
+  end
+
+  def bye?
+    opponent_id.nil? && opponent_score.nil?
   end
 
   def lucky_win?
