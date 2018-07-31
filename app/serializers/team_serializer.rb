@@ -8,5 +8,7 @@ class TeamSerializer
     :wins,
     :losses
 
+  has_many :team_matchups
+
   set_key_transform :dash
 end

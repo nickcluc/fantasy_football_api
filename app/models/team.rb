@@ -1,10 +1,9 @@
 class Team < ApplicationRecord
-  default_scope { order(league_year: :desc) }
   include Statistics
 
   belongs_to :owner
   belongs_to :web_response
-  has_many   :team_matchups
+  has_many   :team_matchups, -> { order(matchup_date: :asc) }
 
 
   def scores
