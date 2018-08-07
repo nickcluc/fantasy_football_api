@@ -1,0 +1,2 @@
+class PlayerResponse < ApplicationRecord
+end

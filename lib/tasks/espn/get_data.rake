@@ -16,4 +16,23 @@ namespace :get_data do
       wr.save!
     end
   end
+
+  desc "Get football player data and store response"
+  task players: :environment do
+    uri = "https://api.sleeper.app/v1/players/nfl"
+
+    touched_today = PlayerResponse.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).
+      or(PlayerResponse.where(updated_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).any?
+
+    if touched_today
+      puts "player info retrieved today"
+      next
+    end
+
+    pr = PlayerResponse.first || PlayerResponse.new
+    response = HTTParty.get uri
+
+    pr.response_body = response.body
+    pr.save!
+  end
 end
