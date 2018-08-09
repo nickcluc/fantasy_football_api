@@ -1,7 +1,10 @@
 class Api::V1::TeamMatchupsController < Api::V1::BaseController
   def index
     if params[:filter]
-      @team_matchups = TeamMatchup.find(params[:filter][:id].split(',')).where(regular_season: true)
+      @team_matchups = TeamMatchup.find(params[:filter][:id].split(',')).keep_if{|mu| mu.regular_season == true}
+      if params[:filter][:regular_season]
+        @team_matchups.keep_if{|mu| mu.regular_season == true}
+      end
     else
       @team_matchups = TeamMatchup.order(season_id: :asc, week_number: :asc).all
     end
