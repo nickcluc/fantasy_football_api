@@ -1,7 +1,7 @@
 class Api::V1::TeamMatchupsController < Api::V1::BaseController
   def index
     if params[:filter]
-      @team_matchups = TeamMatchup.find(params[:filter][:id].split(','))
+      @team_matchups = TeamMatchup.find(params[:filter][:id].split(',')).where(regular_season: true)
     else
       @team_matchups = TeamMatchup.order(season_id: :asc, week_number: :asc).all
     end
