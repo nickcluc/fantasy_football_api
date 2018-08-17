@@ -17,7 +17,8 @@ class OwnerSerializer
     :average_total_points,
     :average_regular_season_score,
     :min_score,
-    :max_score
+    :max_score,
+    :head_to_head_vs_all
 
   has_many :teams
   has_many :team_matchups

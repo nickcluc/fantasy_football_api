@@ -108,14 +108,21 @@ class Owner < ApplicationRecord
         d += 1
       end
     end
-    "#{w}-#{l}-#{d}"
+    {
+      name: other_owner.full_name,
+      wins: w,
+      losses: l,
+      draws: d,
+    }
   end
 
   def head_to_head_vs_all
-    hash = {}
-    Owner.where.not(id: id).each do |owner|
-      hash[owner.full_name] = head_to_head_record(owner.id)
+    Owner.where.not(id: id).map do |owner|
+      head_to_head_record(owner.id)
     end
-    hash
+  end
+
+  def opponents
+    Owner.where.not(id: self.id)
   end
 end
