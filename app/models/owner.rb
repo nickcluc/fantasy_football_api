@@ -1,5 +1,5 @@
 class Owner < ApplicationRecord
-  has_many :teams, -> { order(league_year: :asc) }
+  has_many :teams, -> { order(league_year: :desc) }
   has_many :team_matchups, -> { order(matchup_date: :asc) }, through: :teams
   has_many :championships, class_name: "Season", foreign_key: "champion_id"
   has_many :second_places, class_name: "Season", foreign_key: "second_place_id"
