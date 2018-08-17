@@ -21,8 +21,8 @@ class OwnerSerializer
 
   has_many :teams
   has_many :team_matchups
-  has_many :championships
-  has_many :second_places
-  has_many :third_places
-  has_many :last_places
+  has_many :championships, record_type: :season
+  has_many :second_places, record_type: :season
+  has_many :third_places, record_type: :season
+  has_many :last_places, record_type: :season
 end
