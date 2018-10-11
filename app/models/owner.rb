@@ -8,7 +8,33 @@ class Owner < ApplicationRecord
 
   def self.luck_hash
     hash = {}
-    Owner.all.each { |owner| hash[owner.full_name.gsub(/\s+/, "")] = owner.lucky_wins.count }
+    Owner.all.map do |owner|
+      wins            = owner.winning_matchups.count
+      losses          = owner.losing_matchups.count
+      lucky_wins      = owner.lucky_wins.count
+      strong_wins     = owner.strong_wins.count
+      unlucky_losses  = owner.unlucky_losses.count
+      lucky_factor    = (lucky_wins.to_f / wins.to_f).round(5)
+      unlucky_factor  = -(unlucky_losses.to_f / losses.to_f).round(5)
+      {
+        name: owner.full_name,
+        stats:{
+          wins: wins,
+          losses: losses,
+          lucky_wins: lucky_wins,
+          strong_wins: strong_wins,
+          unlucky_losses: unlucky_losses,
+          lucky_factor: lucky_factor,
+          unlucky_factor: unlucky_factor,
+        },
+        luck_score: (lucky_factor + unlucky_factor).round(5),
+      }
+    end.sort_by{|hash| hash[:luck_score]}.reverse
+  end
+
+  def self.strong_hash
+    hash = {}
+    Owner.all.each { |owner| hash[owner.full_name.gsub(/\s+/, "")] = owner.strong_wins.count }
     hash
   end
 
@@ -42,8 +68,20 @@ class Owner < ApplicationRecord
     regular_season_matchups.where('score > opponent_score')
   end
 
+  def losing_matchups
+    regular_season_matchups.where('score < opponent_score')
+  end
+
   def lucky_wins
     winning_matchups.to_a.keep_if { |match| match.lucky_win? }
+  end
+
+  def strong_wins
+    winning_matchups.to_a.keep_if { |match| match.strong_win? }
+  end
+
+  def unlucky_losses
+    losing_matchups.to_a.keep_if { |match| match.unlucky_loss? }
   end
 
   def league_year_matchups(league_year=nil, regular_season=nil)
@@ -93,6 +131,13 @@ class Owner < ApplicationRecord
     regular_season_matchups.pluck(:score).max
   end
 
+  def py_expectation
+    tpa = Season.all_total_medians
+    exp = 1.5*Math.log((total_points+tpa)/regular_season_matchups.count)
+    ((total_points**exp)/(total_points**exp+tpa**exp))*regular_season_matchups.count
+    # 1/(1+(totsl_points/total_points_against)**2)
+  end
+
   def head_to_head_record(other_owner_id,regular_season=true)
     return if other_owner_id == self.id
     other_owner = Owner.find(other_owner_id)
@@ -124,5 +169,9 @@ class Owner < ApplicationRecord
 
   def opponents
     Owner.where.not(id: self.id)
+  end
+
+  def weekly_record_vs_everyone(season, week)
+    other_matchups = TeamMatchup.where(week_number: week_number, season_id: season_id).not(team_id: team_id)
   end
 end

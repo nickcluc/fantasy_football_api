@@ -25,29 +25,66 @@ class TeamMatchup < ApplicationRecord
   end
 
   def lucky_win?
-    raise "Not a win" unless win?
-    weekly_head_to_head_whole_league <= 0.333
+    return unless win?
+    win_pct_head_to_head_whole_week <= 0.5
+  end
+
+  def strong_win?
+    return unless win?
+    win_pct_head_to_head_whole_week >= 0.666
+  end
+
+  def unlucky_loss?
+    return unless loss?
+    losing_pct_head_to_head_whole_week <= 0.5
   end
 
   def final_score
     "#{team.abbreviation}: #{score} - #{opponent.abbreviation}: #{opponent_score}"
   end
 
+  def median_score
+    return unless regular_season?
+    team_matchups = TeamMatchup.select([:season_id, :week_number, :score])
+    distinct_weeks = team_matchups.where(regular_season:true).map{|tm| [tm.season_id, tm.week_number]}.uniq
+    distinct_weeks.map
+    Statistics.median(tms)
+    # tms = TeamMatchup.where(season_id: season_id, week_number: week_number, regular_season:true).pluck(:score)
+  end
+
   def weekly_head_to_head_whole_league
-    w = 0
-    l = 0
-    d = 0
-    matchups = TeamMatchup.where(season_id: season_id, week_number: week_number, regular_season:true).where.not(id: id)
-    matchups.each do |match|
+    record_hash = {
+      w: 0,
+      l: 0,
+      d: 0
+    }
+
+    weekly_matchups.each do |match|
       if score > match.score
-        w += 1
+        record_hash[:w] += 1
       elsif score < match.score
-        l += 1
+        record_hash[:l] += 1
       else
-        d += 1
+        record_hash[:d] += 1
       end
     end
-    (w.to_f/(matchups.count - d).to_f).round(3)
+    record_hash
+  end
+
+  def weekly_matchups
+    TeamMatchup.where(season_id: season_id, week_number: week_number, regular_season:true)
+  end
+
+  def win_pct_head_to_head_whole_week
+    w = weekly_head_to_head_whole_league[:w]
+    d = weekly_head_to_head_whole_league[:d]
+    (w.to_f/(weekly_matchups.count - d).to_f).round(3)
+  end
+
+  def losing_pct_head_to_head_whole_week
+    l = weekly_head_to_head_whole_league[:l]
+    d = weekly_head_to_head_whole_league[:d]
+    (l.to_f/(weekly_matchups.count - d).to_f).round(3)
   end
 
   def self.no_dates

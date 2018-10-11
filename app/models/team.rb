@@ -10,6 +10,14 @@ class Team < ApplicationRecord
     team_matchups.pluck(:score)
   end
 
+  def regular_season_matchups
+    team_matchups.where(regular_season: true)
+  end
+
+  def regular_season_scores
+    regular_season_matchups.pluck(:score)
+  end
+
   def regular_season_matchup_count
     team_matchups.where(regular_season: true).count
   end
@@ -18,8 +26,8 @@ class Team < ApplicationRecord
     team_matchups.find_by(week_number: week_number).score
   end
 
-  def sum
-    Statistics.sum(scores)
+  def sum(totals=scores)
+    Statistics.sum(totals)
   end
 
   def update_total
@@ -51,6 +59,15 @@ class Team < ApplicationRecord
 
   def std_dev
     return Math.sqrt(sample_variance).round(3)
+  end
+
+  def py_expectation_from_median
+    tpa = Season.find_by(league_year: league_year).total_median_score
+    total_points = Statistics.sum(regular_season_matchups.pluck(:score))
+    count = regular_season_matchups.count
+    # exp = 1.5*Math.log((total_points+tpa)/count)
+    # ((total_points**exp)/(total_points**exp+tpa**exp))*count
+    wins * (1/(1+(total_points/tpa)**3.48))
   end
 
   def build_team_matchups

@@ -77,10 +77,13 @@ namespace :parse_data do
           second_id = json['leaguesettings']['finalCalculatedRanking'][1] || nil
           third_id = json['leaguesettings']['finalCalculatedRanking'][2] || nil
           last_id = json['leaguesettings']['playoffSeedings'].last || nil
-          season.champion_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][champ_id.to_s]['owners'].first['ownerId']).id
-          season.second_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][second_id.to_s]['owners'].first['ownerId']).id
-          season.third_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][third_id.to_s]['owners'].first['ownerId']).id
-          season.last_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][last_id.to_s]['owners'].first['ownerId']).id
+
+          if (champ_id && second_id && third_id && last_id)
+            season.champion_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][champ_id.to_s]['owners'].first['ownerId']).id
+            season.second_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][second_id.to_s]['owners'].first['ownerId']).id
+            season.third_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][third_id.to_s]['owners'].first['ownerId']).id
+            season.last_place_id = Owner.find_by(espn_id: json['leaguesettings']['teams'][last_id.to_s]['owners'].first['ownerId']).id
+          end
         end
 
         season.save!
