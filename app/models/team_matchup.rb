@@ -60,4 +60,8 @@ class TeamMatchup < ApplicationRecord
     team.total_score = team.sum
     team.save!
   end
+
+  def future?
+    score == 0 && opponent_score == 0
+  end
 end

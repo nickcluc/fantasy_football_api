@@ -77,7 +77,7 @@ class Team < ApplicationRecord
         tm.score = score
         tm.opponent_id = Team.find_by(external_team_id: opponent_external_identifier).id
         tm.opponent_score = opponent_score
-        tm.save!
+        tm.save! unless tm.future?
       rescue => err
         print "#{opponent_external_identifier}"
       end
