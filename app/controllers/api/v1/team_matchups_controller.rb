@@ -6,9 +6,9 @@ class Api::V1::TeamMatchupsController < Api::V1::BaseController
         @team_matchups.keep_if{|mu| mu.regular_season == true}
       end
     else
-      @team_matchups = TeamMatchup.order(season_id: :asc, week_number: :asc).all
+      @team_matchups = TeamMatchup.all
     end
-
+    @team_matchups.order(season_id: :asc, week_number: :asc)
     render json: TeamMatchupSerializer.new(@team_matchups).serialized_json, callback: params['callback']
   end
 end
