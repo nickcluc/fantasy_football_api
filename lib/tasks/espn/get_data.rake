@@ -2,16 +2,26 @@ namespace :get_data do
   desc "Make web Request and store response"
   task :request => :environment do
     LEAGUE_YEARS.each do |year|
-      query = { leagueId: LEAGUE_ID, seasonId: year, rand: rand(10 ** 13) }
+      uri_string = "http://fantasy.espn.com/apis/v3/games/ffl/seasons/#{year}/segments/0/leagues/#{LEAGUE_ID}" +
+        "?view=mDraftDetail&view=mLiveScoring" +
+        "&view=mMatchupScore&view=mPendingTransactions" +
+        "&view=mPositionalRatings&view=mSettings" +
+        "&view=mTeam&view=modular&view=mNav"
+
+      response = HTTParty.get uri_string
+
+      if response.content_type != "application/json"
+        raise "Response from API not JSON"
+      end
+
       wr = WebResponse.find_or_initialize_by league_year: year
       if wr.persisted? && wr.updated_at.today?
         puts "We already updated #{wr.league_year} today"
         next
       end
-      response = HTTParty.get 'http://games.espn.com/ffl/api/v2/leagueSettings', query: query
       #/ffl/api/v2/leagueSchedules?leagueId=445805&rand=0023623302299
       next if response.code >= 400
-      wr.external_league_id = response['metadata']['leagueId']
+      wr.external_league_id = response['id']
       wr.response_body = response.body.force_encoding('iso8859-1').encode('utf-8')
       wr.save!
     end
