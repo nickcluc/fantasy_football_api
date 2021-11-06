@@ -1,8 +1,8 @@
 source "https://rubygems.org"
 
-ruby "2.5.1"
+ruby "2.7.4"
 
-gem "rails", "~>5.2.3"
+gem "rails", "~>6.1"
 gem "pg"
 gem "puma"
 gem "graphql"
